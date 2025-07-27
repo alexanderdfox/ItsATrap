@@ -69,5 +69,3 @@ Since your keyboard is unavailable or disabled, you’ll rely on:
 | Want to exit fullscreen      | Use mouse menu bar or `Cmd+Control+F` shortcut (may require keyboard). |
 
 ---
-
-If you want, I can help you **add on-screen buttons** or **gesture controls** so you can trigger “Escape” or other commands without a keyboard at all — just say the word!
