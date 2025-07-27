@@ -106,8 +106,10 @@ async function enterKleinBottle() {
   }
 }
 
+// ENTER TOPOLOGY ON CLICK
 document.body.addEventListener('click', enterKleinBottle);
 
+// HANDLE LOCK CHANGES
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     closeRift();
@@ -118,9 +120,30 @@ document.addEventListener('pointerlockchange', () => {
   }
 });
 
+// RESIZE HANDLING
 document.addEventListener('fullscreenchange', () => {
   width = window.innerWidth;
   height = window.innerHeight;
+});
+
+// BLOCK REFRESH + ESCAPE
+document.addEventListener('keydown', (e) => {
+  // Block F5
+  if (e.key === 'F5') {
+    e.preventDefault();
+    showRift();
+  }
+
+  // Block Ctrl+R / Cmd+R
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r') {
+    e.preventDefault();
+    showRift();
+  }
+
+  // Escape (user manually exited)
+  if (e.key === 'Escape') {
+    showRift();
+  }
 });
 
 updateCursor();
