@@ -10,6 +10,7 @@
     overflow: hidden;
     background: black;
     cursor: none;
+    user-select: none;
   }
   #cursor {
     position: fixed;
@@ -106,10 +107,8 @@ async function enterKleinBottle() {
   }
 }
 
-// ENTER TOPOLOGY ON CLICK
 document.body.addEventListener('click', enterKleinBottle);
 
-// HANDLE LOCK CHANGES
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     closeRift();
@@ -120,31 +119,41 @@ document.addEventListener('pointerlockchange', () => {
   }
 });
 
-// RESIZE HANDLING
 document.addEventListener('fullscreenchange', () => {
   width = window.innerWidth;
   height = window.innerHeight;
 });
 
-// BLOCK REFRESH + ESCAPE
 document.addEventListener('keydown', (e) => {
-  // Block F5
-  if (e.key === 'F5') {
-    e.preventDefault();
-    showRift();
-  }
+  const key = e.key.toLowerCase();
+  const blocked =
+    key === 'f5' ||
+    (key === 'r' && (e.ctrlKey || e.metaKey)) ||    // Refresh
+    (key === 't' && (e.ctrlKey || e.metaKey)) ||    // New tab
+    (key === 'w' && (e.ctrlKey || e.metaKey)) ||    // Close tab
+    key === 'f12' ||                                // Dev Tools
+    (key === 'i' && (e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey)) ||
+    (key === 'u' && (e.ctrlKey || e.metaKey)) ||    // View source
+    (key === 's' && (e.ctrlKey || e.metaKey)) ||    // Save page
+    (key === 'p' && (e.ctrlKey || e.metaKey)) ||    // Print
+    (key === 'd' && (e.ctrlKey || e.metaKey)) ||    // Bookmark
+    (key === 'f' && (e.ctrlKey || e.metaKey)) ||    // Find
+    key === 'escape';                               // Exit lock
 
-  // Block Ctrl+R / Cmd+R
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r') {
+  if (blocked) {
     e.preventDefault();
+    e.stopPropagation();
     showRift();
-  }
-
-  // Escape (user manually exited)
-  if (e.key === 'Escape') {
-    showRift();
+    return false;
   }
 });
+
+// Disable right-click context menu
+window.addEventListener('contextmenu', e => e.preventDefault());
+
+// Disable drag/drop
+window.addEventListener('dragstart', e => e.preventDefault());
+window.addEventListener('drop', e => e.preventDefault());
 
 updateCursor();
 </script>
