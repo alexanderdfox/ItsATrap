@@ -69,3 +69,38 @@ Since your keyboard is unavailable or disabled, you’ll rely on:
 | Want to exit fullscreen      | Use mouse menu bar or `Cmd+Control+F` shortcut (may require keyboard). |
 
 ---
+
+## Running in Kiosk Mode on macOS with Google Chrome
+
+To run the Klein Bottle Rift webpage in a **locked fullscreen kiosk mode** using Google Chrome on macOS, follow these steps:
+
+### Step 1: Locate Your HTML File
+
+Make sure your `index.html` (or whatever you named it) is saved locally, e.g.: index.html
+### Step 2: Open Terminal
+
+Launch the macOS Terminal app (`/Applications/Utilities/Terminal.app`).
+
+### Step 3: Run Chrome in Kiosk Mode
+
+Execute this command in Terminal (replace the path with your actual file path):
+
+```open -a "Google Chrome" --args --kiosk "file:///~/Documents/index.html"```
+This will:
+	•	Launch Chrome fullscreen without address bar, tabs, or controls.
+	•	Load your Klein Bottle Rift webpage.
+	•	Trap the mouse pointer and disable keyboard commands as scripted.
+
+Step 4: Exiting Kiosk Mode
+
+To exit kiosk mode, press:
+	•	Cmd + Q to quit Google Chrome completely.
+
+⸻
+
+Tips for Using Chrome Kiosk Mode
+	•	You can create a shell script or macOS Automator app with the above command to launch more easily.
+	•	For public kiosks, configure macOS System Preferences to prevent app switching or quitting if needed.
+	•	Chrome kiosk mode disables most browser UI, but OS-level shortcuts still work (like Cmd+Q).
+	•	Combine with macOS settings or third-party tools to lock down the environment further.
+---
