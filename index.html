@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Klein Bottle Rift</title>
 <style>
   html, body {
@@ -11,6 +11,7 @@
     background: black;
     cursor: none;
     user-select: none;
+    touch-action: none; /* Disable default touch actions like scrolling */
   }
   #cursor {
     position: fixed;
@@ -109,22 +110,51 @@ async function enterKleinBottle() {
 
 document.body.addEventListener('click', enterKleinBottle);
 
-document.addEventListener('pointerlockchange', () => {
-  if (document.pointerLockElement === document.body) {
-    closeRift();
-    document.addEventListener('mousemove', moveHandler);
-  } else {
-    showRift();
-    document.removeEventListener('mousemove', moveHandler);
+// Touch handlers to move cursor
+function touchMoveHandler(e) {
+  if (e.touches.length > 0) {
+    let touch = e.touches[0];
+    let newX = touch.clientX;
+    let newY = touch.clientY;
+
+    let deltaX = newX - x;
+    let deltaY = newY - y;
+
+    x += deltaX;
+    y += deltaY;
+
+    const wrapped = wrapKlein(x, y);
+    x = wrapped.x;
+    y = wrapped.y;
+
+    updateCursor();
+
+    e.preventDefault();
   }
-});
+}
 
-document.addEventListener('fullscreenchange', () => {
-  width = window.innerWidth;
-  height = window.innerHeight;
-});
+function touchStartHandler(e) {
+  if (e.touches.length > 0) {
+    let touch = e.touches[0];
+    x = touch.clientX;
+    y = touch.clientY;
 
-// Block all major key commands and log
+    const wrapped = wrapKlein(x, y);
+    x = wrapped.x;
+    y = wrapped.y;
+
+    updateCursor();
+
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchstart', touchStartHandler, { passive: false });
+document.addEventListener('touchmove', touchMoveHandler, { passive: false });
+
+// Blocked keys log (no visible counter)
+const blockedKeysLog = [];
+
 document.addEventListener('keydown', (e) => {
   const key = e.key.toLowerCase();
   const keyCombo = `${e.ctrlKey ? 'Ctrl+' : ''}${e.metaKey ? 'Cmd+' : ''}${e.shiftKey ? 'Shift+' : ''}${e.altKey ? 'Alt+' : ''}${e.key}`;
@@ -146,10 +176,30 @@ document.addEventListener('keydown', (e) => {
   if (blocked) {
     e.preventDefault();
     e.stopPropagation();
+    blockedKeysLog.push(keyCombo);
     console.warn(`🛑 Blocked key command: ${keyCombo}`);
     showRift();
     return false;
   }
+});
+
+document.addEventListener('pointerlockchange', () => {
+  if (document.pointerLockElement === document.body) {
+    closeRift();
+    document.addEventListener('mousemove', moveHandler);
+  } else {
+    showRift();
+    document.removeEventListener('mousemove', moveHandler);
+    // Auto re-enter pointer lock + fullscreen after 3 seconds
+    setTimeout(() => {
+      enterKleinBottle();
+    }, 3000);
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  width = window.innerWidth;
+  height = window.innerHeight;
 });
 
 // Disable context menu, drag/drop
