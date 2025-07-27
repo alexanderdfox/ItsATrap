@@ -1,3 +1,5 @@
+#testpage: https://klein-8kk.pages.dev
+
 # Klein Bottle Rift — macOS No Keyboard Usage Guide
 
 ## What it is
