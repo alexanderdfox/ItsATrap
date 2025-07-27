@@ -124,34 +124,36 @@ document.addEventListener('fullscreenchange', () => {
   height = window.innerHeight;
 });
 
+// Block all major key commands and log
 document.addEventListener('keydown', (e) => {
   const key = e.key.toLowerCase();
+  const keyCombo = `${e.ctrlKey ? 'Ctrl+' : ''}${e.metaKey ? 'Cmd+' : ''}${e.shiftKey ? 'Shift+' : ''}${e.altKey ? 'Alt+' : ''}${e.key}`;
+
   const blocked =
     key === 'f5' ||
-    (key === 'r' && (e.ctrlKey || e.metaKey)) ||    // Refresh
-    (key === 't' && (e.ctrlKey || e.metaKey)) ||    // New tab
-    (key === 'w' && (e.ctrlKey || e.metaKey)) ||    // Close tab
-    key === 'f12' ||                                // Dev Tools
+    (key === 'r' && (e.ctrlKey || e.metaKey)) ||
+    (key === 't' && (e.ctrlKey || e.metaKey)) ||
+    (key === 'w' && (e.ctrlKey || e.metaKey)) ||
+    key === 'f12' ||
     (key === 'i' && (e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey)) ||
-    (key === 'u' && (e.ctrlKey || e.metaKey)) ||    // View source
-    (key === 's' && (e.ctrlKey || e.metaKey)) ||    // Save page
-    (key === 'p' && (e.ctrlKey || e.metaKey)) ||    // Print
-    (key === 'd' && (e.ctrlKey || e.metaKey)) ||    // Bookmark
-    (key === 'f' && (e.ctrlKey || e.metaKey)) ||    // Find
-    key === 'escape';                               // Exit lock
+    (key === 'u' && (e.ctrlKey || e.metaKey)) ||
+    (key === 's' && (e.ctrlKey || e.metaKey)) ||
+    (key === 'p' && (e.ctrlKey || e.metaKey)) ||
+    (key === 'd' && (e.ctrlKey || e.metaKey)) ||
+    (key === 'f' && (e.ctrlKey || e.metaKey)) ||
+    key === 'escape';
 
   if (blocked) {
     e.preventDefault();
     e.stopPropagation();
+    console.warn(`🛑 Blocked key command: ${keyCombo}`);
     showRift();
     return false;
   }
 });
 
-// Disable right-click context menu
+// Disable context menu, drag/drop
 window.addEventListener('contextmenu', e => e.preventDefault());
-
-// Disable drag/drop
 window.addEventListener('dragstart', e => e.preventDefault());
 window.addEventListener('drop', e => e.preventDefault());
 
